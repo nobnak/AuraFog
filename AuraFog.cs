@@ -4,6 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class AuraFog : MonoBehaviour {
+    public enum OutputKeywordEnum { None = 0, BlendNormal, DebugDepth, DebugFog }
     const string PROP_DIRECTION = "_Direction";
     const string PROP_BLUR_TEX = "_BlurTex";
     const string PROP_TONE = "_Tone";
@@ -22,7 +23,9 @@ public class AuraFog : MonoBehaviour {
     [Range(0, 20)]
     int blurIterationCount = 1;
     [SerializeField]
-    Vector4 tone = new Vector4 (1f, 1f, 1f, 1f);
+    Vector4 tone = new Vector4 (1f, 1f, 0.01f, 1f);
+    [SerializeField]
+    OutputKeywordEnum outputKeyword;
 
     Material mat;
     DepthTextureMode lastDepthTexMode;
@@ -55,6 +58,9 @@ public class AuraFog : MonoBehaviour {
             Swap (ref tmp0, ref tmp1);
         }
 
+        mat.shaderKeywords = null;
+        if (outputKeyword != OutputKeywordEnum.None)
+            mat.EnableKeyword (outputKeyword.ToString ());
         mat.SetColor (PROP_COLOR, fogColor);
         mat.SetVector (PROP_TONE, tone);
         mat.SetTexture (PROP_BLUR_TEX, tmp0);

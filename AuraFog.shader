@@ -90,6 +90,7 @@
         // 2
 		Pass {
 			CGPROGRAM
+            #pragma multi_compile __ BlendNormal DebugDepth DebugFog
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -100,8 +101,12 @@
 
 				float f = _Tone.x * pow(saturate(dcam - dblur - _Tone.z), _Tone.y);
 
-                #if defined(LERP)
+                #if defined(BlendNormal)
                 return lerp(c, _Color, f);
+                #elif defined(DebugDepth)
+                return dcam;
+                #elif defined(DebugFog)
+                return f * _Color;
                 #else
                 return c + f * _Color;
                 #endif
