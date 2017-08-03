@@ -99,10 +99,10 @@
                 float dcam = Linear01Depth(tex2D(_CameraDepthTexture, i.uv).x);
                 float dblur = tex2D(_BlurTex, i.uv).x;
 
-				float f = _Tone.x * pow(saturate(dcam - dblur - _Tone.z), _Tone.y);
+				float f = _Tone.x * pow(smoothstep(0, 1, dcam - dblur - _Tone.z), _Tone.y);
 
                 #if defined(BlendNormal)
-                return lerp(c, _Color, f);
+                return lerp(c, _Color, saturate(f));
                 #elif defined(DebugDepth)
                 return dcam;
                 #elif defined(DebugFog)
