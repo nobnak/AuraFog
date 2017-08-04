@@ -14,6 +14,7 @@
             const static float OFFSETS[LENGTH] = { 0.649, 2.403, 4.329, 6.264 };
 
             #include "UnityCG.cginc"
+            #include "Assets/Packages/Gist/CGIncludes/Depth.cginc"
 
             sampler2D _MainTex;
             float4 _MainTex_TexelSize;
@@ -37,6 +38,12 @@
                 float4 vertex : SV_POSITION;
             };
 
+            float LinearDepth(float2 uv) {
+                float d = tex2D(_CameraDepthTexture, uv).x;
+                d = CameraDepthTextureDepthTo01Linear(d);
+                return d;
+            }
+
             v2f vert (appdata v) {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -58,8 +65,7 @@
             }
 
             float4 fragDepth (v2f i) : SV_Target {
-                float d = tex2D(_CameraDepthTexture, i.uv).x;
-                d = Linear01Depth(d);
+                float d = LinearDepth(i.uv);
                 return d;
             }
             float4 fragBlur(v2fBlur IN) : SV_Target {
@@ -96,7 +102,7 @@
 
 			fixed4 frag (v2f i) : SV_Target {
 				float4 c = tex2D(_MainTex, i.uv);
-                float dcam = Linear01Depth(tex2D(_CameraDepthTexture, i.uv).x);
+                float dcam = LinearDepth(i.uv);
                 float dblur = tex2D(_BlurTex, i.uv).x;
 
 				//float f = _Tone.x * pow(smoothstep(0, 1, saturate(dcam - dblur - _Tone.z) / dcam), _Tone.y);

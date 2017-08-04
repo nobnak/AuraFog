@@ -38,6 +38,8 @@ public class AuraFog : MonoBehaviour {
         var c = Camera.current;
         lastDepthTexMode = c.depthTextureMode;
         c.depthTextureMode = DepthTextureMode.Depth;
+
+        Debug.LogFormat ("Projection Matrix\n{0}", GL.GetGPUProjectionMatrix (c.projectionMatrix, true));
     }
     void OnRenderImage(RenderTexture src, RenderTexture dst) {
         var w = src.width >> lod;
