@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +12,10 @@ public class AuraFog : MonoBehaviour {
 
     const string KW_VERTICAL = "VERTICAL";
 
-    [SerializeField]
-    Shader shader;
-    [SerializeField]
-    Color fogColor;
+	[SerializeField]
+	Shader shader = null;
+	[SerializeField]
+	Color fogColor = Color.clear;
     [SerializeField]
     [Range(0, 4)]
     int lod = 1;
@@ -24,8 +24,8 @@ public class AuraFog : MonoBehaviour {
     int blurIterationCount = 1;
     [SerializeField]
     Vector4 tone = new Vector4 (1f, 1f, 0.01f, 1f);
-    [SerializeField]
-    OutputKeywordEnum outputKeyword;
+	[SerializeField]
+	OutputKeywordEnum outputKeyword = OutputKeywordEnum.None;
 
     Material mat;
     DepthTextureMode lastDepthTexMode;
